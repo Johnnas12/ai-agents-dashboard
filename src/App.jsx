@@ -1,0 +1,24 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MarketSummary from "./components/MarketSummary";
+import AvailableCoins from "./components/AvailableCoins";
+import DashboardHome from "./components/DashboardHome";
+import Navbar from "./components/Navbar";
+import AvailableCoinsTable from "./components/TopCoins";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-900 text-white">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<DashboardHome  />} />
+          <Route path="/top-10-coins" element={<AvailableCoinsTable />} />
+          <Route path="/available-coins" element={<AvailableCoins />} />
+          <Route path="/market-summary" element={<MarketSummary />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;
