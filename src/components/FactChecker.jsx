@@ -5,6 +5,7 @@ function FactChecker() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [factCheckResults, setFactCheckResults] = useState([]);
+  const [checking, setChecking] = useState({}); // track per-article loading
 
   useEffect(() => {
     axios
@@ -19,20 +20,21 @@ function FactChecker() {
       });
   }, []);
 
-  const handleFactCheck = (url) => {
-    setLoading(true);
+  const handleFactCheck = (article) => {
+    setChecking((prev) => ({ ...prev, [article.url]: true }));
+
     axios
-      .post("/api/fact-check", { url })
+      .post("http://127.0.0.1:8000/fact-check", article)
       .then((response) => {
         setFactCheckResults((prev) => [
           ...prev,
-          { url, result: response.data },
+          { url: article.url, result: response.data.fact_check_result },
         ]);
-        setLoading(false);
+        setChecking((prev) => ({ ...prev, [article.url]: false }));
       })
       .catch((error) => {
         console.error("Error checking fact:", error);
-        setLoading(false);
+        setChecking((prev) => ({ ...prev, [article.url]: false }));
       });
   };
 
@@ -78,10 +80,15 @@ function FactChecker() {
                       Read Full Article
                     </a>
                     <button
-                      onClick={() => handleFactCheck(article.url)}
-                      className="px-4 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600 transition"
+                      onClick={() => handleFactCheck(article)}
+                      disabled={checking[article.url]}
+                      className={`px-4 py-2 flex items-center gap-2 bg-green-500 text-white rounded-xl hover:bg-green-600 transition disabled:opacity-60 disabled:cursor-not-allowed`}
                     >
-                      ✅ Fact Check
+                      {checking[article.url] ? (
+                        <div className="animate-spin h-5 w-5 border-t-2 border-white rounded-full"></div>
+                      ) : (
+                        "✅ Fact Check"
+                      )}
                     </button>
                   </div>
 
@@ -96,19 +103,9 @@ function FactChecker() {
                         <h4 className="font-bold text-white mb-2">
                           📝 Fact-Check Result:
                         </h4>
-                        <p className="text-white mb-1">
-                          <span className="font-semibold">Verdict:</span>{" "}
-                          {result.result.verdict}
+                        <p className="text-white whitespace-pre-line">
+                          {result.result}
                         </p>
-                        <p className="text-white mb-2">
-                          <span className="font-semibold">Legitimacy Score:</span>{" "}
-                          {result.result.legitimacy_score}%
-                        </p>
-                        <ul className="list-disc ml-5 text-white">
-                          {result.result.reasoning.map((reason, i) => (
-                            <li key={i}>{reason}</li>
-                          ))}
-                        </ul>
                       </div>
                     ))}
                 </div>
