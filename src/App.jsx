@@ -4,6 +4,7 @@ import AvailableCoins from "./components/AvailableCoins";
 import DashboardHome from "./components/DashboardHome";
 import Navbar from "./components/Navbar";
 import AvailableCoinsTable from "./components/TopCoins";
+import FactChecker from "./components/FactChecker";
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
           <Route path="/top-10-coins" element={<AvailableCoinsTable />} />
           <Route path="/available-coins" element={<AvailableCoins />} />
           <Route path="/market-summary" element={<MarketSummary />} />
+          <Route path="/fact-checker" element={<FactChecker />} />
+
         </Routes>
       </div>
     </BrowserRouter>
