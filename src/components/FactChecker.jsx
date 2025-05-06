@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ReactMarkdown from 'react-markdown';
 
 function FactChecker() {
   const [news, setNews] = useState([]);
@@ -103,9 +104,7 @@ function FactChecker() {
                         <h4 className="font-bold text-white mb-2">
                           📝 Fact-Check Result:
                         </h4>
-                        <p className="text-white whitespace-pre-line">
-                          {result.result}
-                        </p>
+                        <ReactMarkdown>{result.result}</ReactMarkdown>
                       </div>
                     ))}
                 </div>
